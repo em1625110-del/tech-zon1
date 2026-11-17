@@ -1,5 +1,6 @@
 import { copyFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import process from 'node:process'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
@@ -21,15 +22,16 @@ const githubPagesFallback = {
 
 export default defineConfig({
   plugins: [react(), githubPagesFallback],
-  base: '/Tech-Zone/',
+  // GitHub Pages открывает сайт по адресу /Tech-Zone/, а Vercel — из корня
+  base: process.env.VERCEL ? '/' : '/Tech-Zone/',
   build: {
     rolldownOptions: {
       output: {
         // Библиотеки — в отдельные файлы: браузер кеширует их между обновлениями сайта
         codeSplitting: {
           groups: [
-            { name: 'firebase', test: /node_modules[\/]@?firebase/ },
-            { name: 'react', test: /node_modules[\/](react|react-dom|react-router|scheduler)/ },
+            { name: 'firebase', test: /node_modules[\\/]@?firebase/ },
+            { name: 'react', test: /node_modules[\\/](react|react-dom|react-router|scheduler)/ },
           ],
         },
       },
